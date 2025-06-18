@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Trigger_Context__c</fullName>
+    <description>The specific trigger phase that must match to run the trigger. Trigger logic control records that do not match the specified trigger phase in the trigger code will not run.</description>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <inlineHelpText>The specific trigger phase that must match to run the trigger. Trigger logic control records that do not match the specified trigger phase in the trigger code will not run.</inlineHelpText>
+    <label>Trigger Context</label>
+    <required>true</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>before_insert</fullName>
+                <default>true</default>
+                <label>before_insert</label>
+            </value>
+            <value>
+                <fullName>before_update</fullName>
+                <default>false</default>
+                <label>before_update</label>
+            </value>
+            <value>
+                <fullName>before_delete</fullName>
+                <default>false</default>
+                <label>before_delete</label>
+            </value>
+            <value>
+                <fullName>after_insert</fullName>
+                <default>false</default>
+                <label>after_insert</label>
+            </value>
+            <value>
+                <fullName>after_update</fullName>
+                <default>false</default>
+                <label>after_update</label>
+            </value>
+            <value>
+                <fullName>after_delete</fullName>
+                <default>false</default>
+                <label>after_delete</label>
+            </value>
+            <value>
+                <fullName>after_undelete</fullName>
+                <default>false</default>
+                <label>after_undelete</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

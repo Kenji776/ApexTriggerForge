@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Use_Platform_Event_Based_Logging__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>Should the logs be created via platform events (true) or directly inserted (false)</description>
+    <inlineHelpText>Should the logs be created via platform events (true) or directly inserted (false)</inlineHelpText>
+    <label>Use Platform Event Based Logging</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

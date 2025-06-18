@@ -1,0 +1,73 @@
+.custom-modal-container {
+    width: 95vw !important;
+    height: 95vh;
+    max-width: 95vw;
+    max-height: 95vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.custom-modal-content {
+    flex-grow: 1;
+    overflow: auto;
+    padding-bottom: 1rem;
+}
+
+.log-message-window {
+    max-height: 90%;
+    overflow: auto;
+    background: #f8f8f8;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    font-family: monospace;
+    white-space: pre-wrap;
+}
+
+.log-line {
+    margin-bottom: 0.25rem;
+}
+
+.log-error {
+    color: #c23934; /* Salesforce red */
+    font-weight: bold;
+}
+
+.log-warning {
+    color: #e67300; /* Salesforce orange */
+    font-weight: bold;
+}
+
+.log-success {
+    color: #19c55b; /* Salesforce green */
+    font-weight: bold;
+}
+.log-start {
+    color: #3a49d6; 
+    font-weight: bold;
+}
+
+.log-end {
+    color: #4219b3; 
+    font-weight: bold;
+}
+
+.highlight-record-id {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.log-line {
+    font-family: monospace;
+    white-space: pre-wrap;
+    padding-left: 4px;
+}
+
+.log-line-number {
+    display: inline-block;
+    width: 40px;
+    text-align: right;
+    margin-right: 8px;
+    color: #888;
+    user-select: none;
+}

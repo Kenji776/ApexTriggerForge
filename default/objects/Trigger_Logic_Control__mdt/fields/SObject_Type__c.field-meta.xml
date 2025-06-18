@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SObject_Type__c</fullName>
+    <description>The type of sObject the trigger exists on. Must be one of the supported triggers that implement the control framework. These values may be updated as more triggers implement the framework</description>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <inlineHelpText>The type of sObject the trigger exists on. Must be one of the supported triggers that implement the control framework. These values may be updated as more triggers implement the framework</inlineHelpText>
+    <label>SObject Type</label>
+    <required>true</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Bank_Transaction_Group__c</fullName>
+                <default>true</default>
+                <label>Bank_Transaction_Group__c</label>
+            </value>
+            <value>
+                <fullName>Bank_Transaction__c</fullName>
+                <default>false</default>
+                <label>Bank_Transaction__c</label>
+            </value>
+            <value>
+                <fullName>D2P_Vehicle__c</fullName>
+                <default>false</default>
+                <label>D2P_Vehicle__c</label>
+            </value>
+            <value>
+                <fullName>Vehicle_Transaction__c</fullName>
+                <default>false</default>
+                <label>Vehicle_Transaction__c</label>
+            </value>
+            <value>
+                <fullName>Bank_Recon__c</fullName>
+                <default>false</default>
+                <label>Bank_Recon__c</label>
+            </value>
+            <value>
+                <fullName>Fleet__c</fullName>
+                <default>false</default>
+                <label>Fleet__c</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Enable_Logging__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>should Apex triggers with logging enabled write logs to the Trigger_Execution_Log__c object?</description>
+    <inlineHelpText>should Apex triggers with logging enabled write logs to the Trigger_Execution_Log__c object?</inlineHelpText>
+    <label>Enable Logging</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

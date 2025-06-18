@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Log_TTL_Days__c</fullName>
+    <defaultValue>7</defaultValue>
+    <description>The number of days old a log can be before being purged by the batch job</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The number of days old a log can be before being purged by the batch job</inlineHelpText>
+    <label>Log TTL Days</label>
+    <precision>3</precision>
+    <required>true</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>
