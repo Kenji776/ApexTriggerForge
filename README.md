@@ -52,7 +52,7 @@ An admin disables logging globally, but enables it for their user to debug an is
 Force trigger logic to run even if it’s disabled in metadata — useful for patches, tests, or emergency execution.
 
 **Example**:  
-Use `TriggerLogicController.forceEnable(logicName)` to run logic during testing even if metadata disables it.
+Use `TriggerLogicController.setOverrideLogic(sObjectType, triggerContext, new Set<String>{ logic.DeveloperName });` to run logic during testing even if metadata disables it.
 
 ---
 
