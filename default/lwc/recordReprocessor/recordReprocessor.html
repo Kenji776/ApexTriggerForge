@@ -1,0 +1,241 @@
+<template>
+    <lightning-card title="Record Reprocessor Utility" icon-name="utility:page">
+        <div class="custom-container slds-p-around_medium slds-theme_shade">
+            <div class="slds-box slds-theme_default slds-m-bottom_medium">
+                <h3 class="slds-text-heading_small slds-m-bottom_x-small">What is this?</h3>
+                <p class="slds-text-body_regular">
+                    The <strong>Record Reprocessor Utility</strong> allows you to manually re-run trigger logic for selected records
+                    of any supported sObject. This is useful for fixing data anomalies, reprocessing failed automation, or
+                    manually applying newly introduced logic to existing records.
+                </p>
+                <h3 class="slds-text-heading_small slds-m-top_medium slds-m-bottom_x-small">How to use it:</h3>
+                <ul class="slds-list_dotted slds-m-left_large">
+                    <li>Select the target <strong>SObject Type</strong> and <strong>Trigger Context</strong>.</li>
+                    <li>Choose the logic blocks you want to run from the available list.</li>
+                    <li>Optionally provide a <strong>WHERE clause</strong> to filter the records (e.g., <code>Status__c = 'Active'</code>).</li>
+                    <li>Click <strong>Preview Records</strong> to see a sample of the affected records.</li>
+                    <li>When ready, click <strong>Run Logic</strong> to enqueue the processing job.</li>
+                </ul>
+               <p class="slds-text-body_regular slds-m-top_small">
+                    You'll see a live progress indicator after launching the job, and can track its completion in real time.
+                </p>
+                <p class="slds-text-body_regular slds-m-top_small">
+                    Please note if you select a before insert trigger changes that would normally be applied to the incoming record in the trigger will not be written to the database.
+                    Additionally if your selected trigger expects the sObjects to have certain field values set you must selected them in the 'Select Fields To Query' menu, otherwise the
+                    field data will not be available and your triggers may fail.
+                </p>
+            </div>
+            <!-- SObject + Trigger Context Selection -->
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col">
+                    <lightning-combobox
+                        label="SObject Type"
+                        value={sObjectType}
+                        options={sObjectTypeOptions}
+                        onchange={handleSObjectTypeChange}>
+                    </lightning-combobox>
+                </div>
+                <div class="slds-col">
+                    <lightning-combobox
+                        label="Trigger Context"
+                        value={triggerContext}
+                        options={triggerContextOptions}
+                        onchange={handleTriggerContextChange}>
+                    </lightning-combobox>
+                </div>
+                <div class="slds-col">
+                    <lightning-input
+                        label="Batch Size"
+                        value={batchSize}
+                        type="number"
+                        min="1"
+                        max="200"
+                        onchange={handleBatchSizeChange}>
+                    </lightning-input>
+                </div>
+                <div class="slds-col">
+                    <div class="slds-m-top_medium slds-text-align_right">
+                        <lightning-button variant="neutral" label="Select Fields to Query" onclick={openFieldModal}></lightning-button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logic Function Selection -->
+            <template if:true={logicData}>
+                <section class="section-card slds-m-top_medium">
+                    <div class="section-header">Available Logic Blocks</div>
+                    <lightning-datatable
+                        key-field="Id"
+                        data={logicData}
+                        columns={columns}
+                        onrowselection={handleRowSelection}>
+                    </lightning-datatable>
+                </section>
+            </template>
+
+            <!-- WHERE Clause Input -->
+            <section class="section-card slds-m-top_medium">
+                <div class="section-header">Query Filter</div>
+                <lightning-textarea
+                    label="WHERE Clause (e.g., Status__c = 'Active')"
+                    value={whereClause}
+                    onchange={handleWhereClauseChange}>
+                </lightning-textarea>
+
+                <div class="slds-grid slds-grid_align-spread slds-p-vertical_small">
+                    <div class="slds-col slds-text-body_small slds-text-color_weak">
+
+                    </div>
+                    <div class="slds-col slds-text-align_right">
+                        <lightning-button
+                            variant="brand"
+                            label="Preview Records"
+                            onclick={handlePreviewRecords}>
+                        </lightning-button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Record Preview -->
+            <template if:true={recordPreview.length}>
+                <section class="section-card slds-m-top_medium">
+                    <div class="section-header">
+                        <template if:true={queryRecordsSize}>
+                            Previewing first {numPreviewecords} of {queryRecordsSize} total records
+                        </template>
+                        <template if:false={queryRecordsSize}>
+                            Record Preview
+                        </template>
+                    </div>
+                    <lightning-datatable
+                        key-field="Id"
+                        hide-checkbox-column="true"
+                        data={pagedRecords}
+                        columns={recordColumns}>
+                    </lightning-datatable>
+                    <div class="slds-grid slds-grid_align-spread slds-m-top_small">
+                        <div class="slds-col">
+                            Page {page} of {totalPages}
+                        </div>
+                        <div class="slds-col slds-text-align_right">
+                            <lightning-button-group>
+                                <lightning-button
+                                    label="Previous"
+                                    onclick={handlePrevPage}
+                                    disabled={isPreviousDisabled}>
+                                </lightning-button>
+                                <lightning-button
+                                    label="Next"
+                                    onclick={handleNextPage}
+                                    disabled={isNextDisabled}>
+                                </lightning-button>
+                            </lightning-button-group>
+                        </div>
+                    </div>
+                </section>
+            </template>
+
+            <!-- Run Logic Button -->
+            <div class="slds-m-top_large slds-align_absolute-center">
+                <lightning-button
+                    variant="success"
+                    label="Run Logic"
+                    onclick={handleRunLogic}>
+                </lightning-button>
+            </div>
+            <template if:true={jobId}>
+                <section class="slds-box slds-theme_alert-texture slds-theme_info slds-m-vertical_medium">
+                    <div class="slds-grid slds-grid_align-spread">
+                        <div>
+                            <strong>Batch Job Status:</strong> {jobStatusLabel}
+                        </div>
+                        <div>
+                            <strong>Progress:</strong> {jobProgress}%
+                        </div>
+                        <div>
+                            <strong>Batches:</strong> {batchesProcessed} / {totalBatches}
+                        </div>
+                        <template if:true={errorCount}>
+                            <div>
+                                <strong>Errors:</strong> {errorCount}
+                            </div>
+                        </template>
+                    </div>
+                    <lightning-progress-bar value={jobProgress} size="medium" class="slds-m-top_x-small"></lightning-progress-bar>
+                </section>
+            
+                <!-- Real-time log output -->
+                <div class="slds-m-top_large">
+                    <h3 class="slds-text-heading_small">Live Execution Logs</h3>
+                    <lightning-datatable
+                        key-field="Id"
+                        data={executionLogs}
+                        columns={liveLogColumns}
+                        hide-checkbox-column="true"
+                        max-row-selection="0">
+                    </lightning-datatable>
+                </div>
+            </template>
+        </div>
+
+
+    </lightning-card>
+
+    <template if:true={showProgressModal}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_large">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 class="slds-text-heading_medium">Processing Records</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-progress-bar value={jobProgress} size="large"></lightning-progress-bar>
+                    <p class="slds-m-top_medium">Status: {jobProgress}% - {jobStatusLabel}</p>
+
+
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Close" onclick={closeModal} disabled={isJobRunning}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <!-- New Field Selection Section -->
+    <template if:true={showFieldModal}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 class="slds-text-heading_medium">Select Fields for Query</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-dual-listbox
+                        name="fieldSelector"
+                        label="Available Fields"
+                        source-label="Available"
+                        selected-label="Selected"
+                        field-level-help="Choose fields to include in the dynamic query"
+                        options={fieldOptions}
+                        value={selectedFields}
+                        onchange={handleFieldSelection}>
+                    </lightning-dual-listbox>
+
+                    <lightning-textarea
+                        class="slds-m-top_medium"
+                        label="Selected fields"
+                        value={fieldTextAreaValue}
+                        onchange={handleFieldTextAreaChange}
+                        placeholder="Add additional fields here (e.g., Account.Name, Owner.Email)">
+                    </lightning-textarea>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button variant="neutral" label="Cancel" onclick={closeFieldModal}></lightning-button>
+                    <lightning-button variant="brand" label="Save Fields" onclick={applyFieldSelection}></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+
+</template>

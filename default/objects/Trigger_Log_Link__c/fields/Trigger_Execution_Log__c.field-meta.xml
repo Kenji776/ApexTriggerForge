@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Trigger_Execution_Log__c</fullName>
+    <label>Trigger Execution Log</label>
+    <referenceTo>Trigger_Execution_Log__c</referenceTo>
+    <relationshipLabel>Trigger Log Links</relationshipLabel>
+    <relationshipName>Trigger_Log_Links</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

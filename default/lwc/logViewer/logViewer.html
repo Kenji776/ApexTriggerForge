@@ -1,0 +1,88 @@
+<template>
+    <lightning-card title="Trigger Execution Logs" icon-name="utility:page">
+        <div class="slds-m-around_medium">
+      
+            <template if:true={isLoading}>
+                <div class="slds-is-relative slds-p-vertical_medium">
+                    <lightning-spinner alternative-text="Loading logs..." size="medium"></lightning-spinner>
+                </div>
+            </template>
+
+            <p>View logs related to this record. Please note that because Apex triggers process records in batches of up to 200 records at once, logs may contain data 
+              not directly related to the record you are viewing if they were processed as part of a batch job or import. Due to records not having Ids before insert, before insert operation logs are not guarenteed to be related to this record.
+            </p>
+            <br/>
+            <p>For logs to be generated the enable logging flag must be set to true at the org Default Organization Level Value of the Trigger Settings custom setting, or the user/profile must have a Trigger Settings record to enable it. 
+            </p>
+            <div>
+                Logging is:&nbsp; 
+                <template if:false={isLoggingEnabled}><span class="slds-text-color_error">DISABLED</span></template>
+                <template if:true={isLoggingEnabled}><span class="slds-text-color_success">ENABLED</span></template>
+            </div>
+            <div class="slds-clearfix">
+                <div class="slds-float_right">
+                        <lightning-button 
+                        label="Refresh Logs" 
+                        onclick={refreshLogs} 
+                        class="slds-m-bottom_small">
+                        </lightning-button>
+                </div>
+            </div>
+
+            <template if:true={logs}>
+                <lightning-datatable
+                    key-field="Id"
+                    data={logs}
+                    columns={columns}
+                    onrowaction={handleRowAction}
+                    hide-checkbox-column="true">
+                </lightning-datatable>
+            </template>
+
+            <template if:true={selectedLog}>
+                <section class="slds-modal slds-fade-in-open custom-modal" role="dialog">
+                    <div class="slds-modal__container custom-modal-container">
+                        <header class="slds-modal__header">
+                            <h2 class="slds-modal__title slds-hyphenate">Log Details</h2>
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium custom-modal-content">
+                            <p><strong>Trigger:</strong> {selectedLog.Trigger_Name__c}</p>
+                            <p><strong>Context:</strong> {selectedLog.Context__c}</p>
+                            <p><strong>Timestamp:</strong> 
+                                <lightning-formatted-date-time value={selectedLog.CreatedDate} 
+                                    year="numeric" 
+                                    month="numeric" 
+                                    day="numeric" 
+                                    hour="2-digit"
+                                    minute="2-digit" 
+                                    time-zone-name="short">
+                                </lightning-formatted-date-time></p>
+                            <p><strong>User:</strong> {selectedLog.User__c}</p>
+                            <p><strong>SObject Type:</strong> {selectedLog.SObject_Type__c}</p>
+                            <hr class="slds-m-vertical_medium" />
+                            <div class="slds-m-bottom_small">
+                                <lightning-input
+                                    variant = "label-hidden"
+                                    value={filterText}
+                                    onchange={handleFilterChange}
+                                    placeholder="Enter text to filter log lines..."
+                                ></lightning-input>
+                            </div>
+                            <div class="log-message-window">
+                                <template if:true={selectedLog}>
+                                    <div class="log-container" lwc:dom="manual"></div>
+                                </template>
+                            </div>
+                        </div>
+                        <footer class="slds-modal__footer slds-grid slds-grid_align-end">
+                            <lightning-button variant="brand-outline" label="Download Plaintext Log" onclick={downloadLog} class="slds-m-right_small"></lightning-button>  
+                            <lightning-button variant="brand-outline" label="Download Formatted Log" onclick={downloadHTMLLog} class="slds-m-right_small"></lightning-button>
+                            <lightning-button variant="neutral" label="Close" onclick={closeModal}></lightning-button>
+                        </footer>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </template>
+        </div>
+    </lightning-card>
+</template>
