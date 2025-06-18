@@ -58,46 +58,46 @@ You can deploy using your preferred method (Salesforce DX, Change Sets, etc.). T
 3. **Trigger Remains Clean**
    Your trigger just delegates:
    ```apex
-trigger AccountTrigger_Sample on Account  (
-    before insert,
-    before update,
-    before delete,
-    after insert,
-    after update,
-    after delete,
-    after undelete
-) {
-    AccountTriggerHandler_Sample handler = new AccountTriggerHandler_Sample();
-
-    // Determine trigger context string
-    String context = TriggerLogicController.getTriggerContext(
-        Trigger.isBefore,
-        Trigger.isAfter,
-        Trigger.isInsert,
-        Trigger.isUpdate,
-        Trigger.isDelete,
-        Trigger.isUndelete
-    );
-
-    // Dispatch if context is valid
-    if (!String.isBlank(context)) {
-        try{
-            TriggerLogicController.dispatch(
-                handler,
-                context,
-                Trigger.isDelete ? Trigger.old : Trigger.new,
-                Trigger.oldMap
-            );
-        }catch(exception e){
-            TriggerLogicController.log('FATAL ERROR in AccountTriggerHandler_Sample Trigger\n'+ 
-                                        context+'\n'+ 
-                                        e.getStackTraceString()+'\n'+
-                                        e.getMessage()+'\n'+
-                                        String.valueOf(e.getLineNumber()), TriggerLogicController.LogLevel.ERROR);
-        }
-        TriggerLogicController.flushLogs();
+    trigger AccountTrigger_Sample on Account  (
+        before insert,
+        before update,
+        before delete,
+        after insert,
+        after update,
+        after delete,
+        after undelete
+    ) {
+        AccountTriggerHandler_Sample handler = new AccountTriggerHandler_Sample();
+  
+      // Determine trigger context string
+      String context = TriggerLogicController.getTriggerContext(
+          Trigger.isBefore,
+          Trigger.isAfter,
+          Trigger.isInsert,
+          Trigger.isUpdate,
+          Trigger.isDelete,
+          Trigger.isUndelete
+      );
+  
+      // Dispatch if context is valid
+      if (!String.isBlank(context)) {
+          try{
+              TriggerLogicController.dispatch(
+                  handler,
+                  context,
+                  Trigger.isDelete ? Trigger.old : Trigger.new,
+                  Trigger.oldMap
+              );
+          }catch(exception e){
+              TriggerLogicController.log('FATAL ERROR in AccountTriggerHandler_Sample Trigger\n'+ 
+                                          context+'\n'+ 
+                                          e.getStackTraceString()+'\n'+
+                                          e.getMessage()+'\n'+
+                                          String.valueOf(e.getLineNumber()), TriggerLogicController.LogLevel.ERROR);
+          }
+          TriggerLogicController.flushLogs();
+      }
     }
-}
    ```
 
 ---
