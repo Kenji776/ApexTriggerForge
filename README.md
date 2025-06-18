@@ -2,7 +2,7 @@
 
 **Apex Trigger Forge** is a modular, metadata-driven trigger framework for Salesforce. It allows you to cleanly manage complex business logic, eliminate monolithic trigger files, and control execution dynamically — all without sacrificing bulk safety or performance.
 
-# 🔧 Apex Trigger Framework – Feature Overview
+# 🔧 Feature Overview
 
 This framework provides a modular, metadata-driven approach to managing Apex triggers in Salesforce. Below is a detailed overview of its key features, usage examples, and benefits.
 
