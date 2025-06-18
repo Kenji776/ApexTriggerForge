@@ -2,24 +2,119 @@
 
 **Apex Trigger Forge** is a modular, metadata-driven trigger framework for Salesforce. It allows you to cleanly manage complex business logic, eliminate monolithic trigger files, and control execution dynamically — all without sacrificing bulk safety or performance.
 
+# 🔧 Apex Trigger Framework – Feature Overview
+
+This framework provides a modular, metadata-driven approach to managing Apex triggers in Salesforce. Below is a detailed overview of its key features, usage examples, and benefits.
+
 ---
 
-## 🚀 Features
+## ✅ Enable and Disable Triggers on Demand
 
-- 🧩 **Pluggable Logic Blocks**  
-  Define modular units of trigger logic using custom metadata (`Trigger_Logic_Control__mdt`) so you can enable, disable, and reroute execution without touching code.
+**Description**:  
+Each trigger logic handler is registered via a `Trigger_Logic_Control__mdt` metadata record. You can toggle logic execution on or off without deploying code.
 
-- 🔄 **Batch Reprocessing Support**  
-  Includes a robust record reprocessing utility with live progress tracking and retry-safe batch Apex logic.
+**Example**:  
+Temporarily disable automation during a data migration by unchecking the `Is_Enabled__c` field in metadata.
 
-- ⚙️ **Dynamic Class Resolution**  
-  Specify handler class names in metadata — or let the framework intelligently infer them from sObject names.
+---
 
-- 📓 **Optional Logging Framework**  
-  Toggle detailed execution logs via custom settings at the org or user level. Supports both custom object logging and platform events.
+## 🔁 Recursive Logic Blocking
 
-- 🔐 **Trigger Context Control**  
-  Prevent duplicate executions in complex recursion scenarios with automatic context tracking.
+**Description**:  
+Automatically prevents infinite loops where triggers recursively fire themselves, using execution context tracking.
+
+**Example**:  
+A trigger on `Invoice__c` updates `Fleet__c`, which tries to update the original `Invoice__c`. The loop is stopped by the framework.
+
+---
+
+## 📜 Persistent Logging with Platform Events
+
+**Description**:  
+Logs are written using platform events, bypassing DML restrictions in trigger contexts like `before insert`.
+
+**Example**:  
+Log debug info even when DML isn’t allowed — e.g., in `before update` — using event-based logging.
+
+---
+
+## 🔐 Logging Control via Custom Settings
+
+**Description**:  
+Enable or disable logging at org-wide or per-user level using `Trigger_Settings__c` hierarchy settings.
+
+**Example**:  
+An admin disables logging globally, but enables it for their user to debug an issue.
+
+---
+
+## 🚨 Overrideable Enable/Disable Flag
+
+**Description**:  
+Force trigger logic to run even if it’s disabled in metadata — useful for patches, tests, or emergency execution.
+
+**Example**:  
+Use `TriggerLogicController.forceEnable(logicName)` to run logic during testing even if metadata disables it.
+
+---
+
+## 🧵 Toggleable Async Execution
+
+**Description**:  
+Run logic asynchronously via metadata — no need for manual `@future` or `Queueable` wrappers.
+
+**Example**:  
+Run `Lead__c` enrichment logic in async mode by setting `Use_Async__c = true` in metadata.
+
+---
+
+## 🔁 Trigger Re-run Utility
+
+**Description**:  
+Rerun any trigger logic for any set of records via code or UI tool.
+
+**Example**:  
+Reprocess historical records using `TriggerLogicDispatcher.runLogic('LogicName', recordList)` after fixing logic.
+
+---
+
+## 📦 Batch Execution of Trigger Logic
+
+**Description**:  
+Invoke trigger logic within batch jobs for mass updates or data fixes.
+
+**Example**:  
+Backfill logic across 100,000 `Bank_Transaction__c` records using the framework's batch runner.
+
+---
+
+## 📥 Automatic Required Field Injection
+
+**Description**:  
+Specify required fields in metadata and the framework will ensure they are present by injecting missing data.
+
+**Example**:  
+Need `Fleet__r.Pay_Off_Amount__c`? Just include it in `Required_Input_Fields__c` and the framework handles the rest.
+
+---
+
+## 🧾 Record-Level Log Viewer (LWC)
+
+**Description**:  
+A Lightning Web Component shows all logic execution logs tied to a record, with syntax highlighting and download capability.
+
+**Example**:  
+View the “Trigger Logs” tab on a record to see exactly what logic ran and when.
+
+---
+
+## ❌ Non-blocking Apex Errors
+
+**Description**:  
+Errors in logic blocks are caught and logged without halting the transaction. You can configure critical logic to fail hard.
+
+**Example**:  
+An NPE in one logic block logs its error while letting the rest of the process continue unaffected.
 
 ---
 
