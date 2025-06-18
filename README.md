@@ -4,8 +4,6 @@
 
 # 🔧 Feature Overview
 
-This framework provides a modular, metadata-driven approach to managing Apex triggers in Salesforce. Below is a detailed overview of its key features, usage examples, and benefits.
-
 ---
 
 ## ✅ Enable and Disable Triggers on Demand
